@@ -26,6 +26,8 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+
+                    <button class="btn btn-outline-danger" id="logoutButton">Logout</button>
                 </div>
             </div>
         </nav>
@@ -45,5 +47,12 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+		document.getElementById("logoutButton").addEventListener("click", function(){
+            localStorage.removeItem('jwtToken');
+			window.location.href = "/Login";
+        });
+    </script>
 </body>
 </html>
