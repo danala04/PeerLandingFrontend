@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Borrower Loan";
+	Layout = "_LayoutBorrower";
+}
+
+<h2>Borrower Loan</h2>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRequestLoanModal">Add Request Loan</button>
+
+<table class="table table-striped" id="loanTable">
+    <thead>
+        <tr>
+            <th>Jumlah Pinjaman</th>
+            <th>Bunga</th>
+            <th>Durasi</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<!-- Modal Add Request Loan -->
+<div class="modal fade" id="addRequestLoanModal" tabindex="-1" role="dialog" aria-labelledby="addRequestLoanModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRequestLoanModalLabel">Add Request Loan</h5>
+            </div>
+            <div class="modal-body">
+                <form id="addRequestLoanForm">
+                    <div class="form-group">
+                        <label for="requestLoanAmount">Amount</label>
+                        <input type="number" class="form-control" id="requestLoanAmount" required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="addRequestLoan()">Submit Loan Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/loan.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+}
