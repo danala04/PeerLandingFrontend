@@ -30,7 +30,10 @@
                     window.location.href = '/home/index';
                 } else if (role === 'borrower') {
                     window.location.href = '/borrowerLoan/index';
-                } else {
+                } else if (role === 'lender') {
+                    window.location.href = '/lenderSaldo/index';
+                }
+                else {
                     alert('Unauthorized role.');
                 }
             } else {

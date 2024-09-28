@@ -89,6 +89,7 @@ async function updateUser() {
         role: role,
         balance: parseFloat(balance)
     }
+    console.log(reqMstUserDto);
     const token = localStorage.getItem("jwtToken")
 
     const response = await fetch(`/ApiMstUSer/UpdateUser?id=${id}`, {

@@ -34,6 +34,25 @@ namespace PeerLandingFE.Controllers.api
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllLoans(string status)
+        {
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync($"https://localhost:7240/rest/v1/loan?status={status}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseData = await response.Content.ReadAsStringAsync();
+                return Ok(responseData);
+            }
+            else
+            {
+                return BadRequest("Get list loans failed!");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddLoanRequest([FromBody] ReqAddLoanDto reqAdd)
         {
@@ -58,6 +77,33 @@ namespace PeerLandingFE.Controllers.api
             else
             {
                 return BadRequest("Failed to add loan");
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateLoan(string id, [FromBody] ReqUpdateLoanDto reqUpdate)
+        {
+            if (reqUpdate == null)
+            {
+                return BadRequest("Invalid loan data!");
+            }
+
+            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var json = JsonSerializer.Serialize(reqUpdate);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"https://localhost:7240/rest/v1/loan/{id}", content);
+            Console.WriteLine(response.ToString());
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseData = await response.Content.ReadAsStringAsync();
+                return Ok(responseData);
+            }
+            else
+            {
+                return BadRequest("Failed to update loan");
             }
         }
     }

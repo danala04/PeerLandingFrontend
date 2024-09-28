@@ -62,7 +62,7 @@ namespace PeerLandingFE.Controllers.api
 
         [HttpPut]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] ReqMstUserDto reqMstUserDto)
-        {
+        {            
             if (reqMstUserDto == null)
             {
                 return BadRequest("Invalid user data");

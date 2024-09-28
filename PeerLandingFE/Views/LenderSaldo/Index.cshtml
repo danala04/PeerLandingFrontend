@@ -1,0 +1,42 @@
+﻿@{
+	ViewData["Title"] = "Lender Saldo";
+	Layout = "_LayoutLender";
+}
+
+<h2>Lender Saldo</h2>
+
+<div>
+	<strong>Your Balance: </strong><span id="userBalance">Loading...</span>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editSaldoModal">Ubah Saldo</button>
+
+<!-- Modal Edit Saldo -->
+<div class="modal fade" id="editSaldoModal" tabindex="-1" role="dialog" aria-labelledby="editSaldoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSaldoModalLabel">Edit Saldo</h5>
+            </div>
+            <div class="modal-body">
+                <form id="editSaldoForm">
+                    <div class="form-group">
+                        <label for="saldoAmount">Saldo</label>
+                        <input type="number" class="form-control" id="saldoAmount" required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="updateBalance()">Submit Changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+	<script src="~/js/saldo.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+}
