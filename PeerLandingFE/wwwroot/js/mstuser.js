@@ -1,6 +1,6 @@
 ﻿async function fetchUser() {
     const token = localStorage.getItem("jwtToken");
-    const response = await fetch("ApiMstUser/GetAllUsers", {
+    const response = await fetch("/ApiMstUser/GetAllUsers", {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + token
@@ -8,6 +8,7 @@
     });
 
     if (!response.ok) {
+        console.log(response);
         alert('Failed to fetch users');
         return;
     }
@@ -15,6 +16,17 @@
     const jsonData = await response.json();
     if (jsonData.success) {
         populateUserTable(jsonData.data);
+
+        if ($.fn.DataTable.isDataTable("#userTable")) {
+            $('#userTable').DataTable().clear().destroy();
+        }
+
+        $('#userTable').DataTable({
+            "paging": true,
+            "ordering": true,
+            "info": false,
+            "responsive": true
+        });
     } else {
         alert(jsonData.message);
     }
@@ -26,15 +38,36 @@ function populateUserTable(users) {
 
     users.forEach(user => {
         const row = document.createElement("tr");
+        const formattedBalance = parseFloat(user.balance).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 });
+        let roleClass = '';
+        switch (user.role.toLowerCase()) {
+            case 'admin':
+                roleClass = 'badge bg-danger';
+                break;
+            case 'lender':
+                roleClass = 'badge bg-primary';
+                break;
+            case 'borrower':
+                roleClass = 'badge bg-success';
+                break;
+            default:
+                roleClass = 'badge bg-secondary';
+                break;
+        }
+
         row.innerHTML = `
-          <td>${user.name}</td>
+          <td><b>${user.name}<b></td>
           <td>${user.email}</td>
-          <td>${user.role}</td>
-          <td>${user.balance}</td>
+          <td><span class="${roleClass}">${user.role}</span></td>
+          <td>${formattedBalance}</td>
           <td>
-            <button class="btn btn-primary btn-sm" onClick="editUser('${user.id}')">Edit</button>
-            <button class="btn btn-danger btn-sm" onClick="deleteUser('${user.id}')">Delete</button>
-          </td>
+              <button class="btn btn-primary btn-sm" onClick="editUser('${user.id}')">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" onClick="deleteUser('${user.id}')">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
         `;
         userTableBody.appendChild(row);
     });
@@ -46,7 +79,7 @@ async function editUser(id) {
     const token = localStorage.getItem("jwtToken");
 
     try {
-        const response = await fetch(`ApiMstUser/GetUserById/${id}`, {
+        const response = await fetch(`/ApiMstUser/GetUserById/${id}`, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + token
@@ -109,7 +142,7 @@ async function updateUser() {
         .then(data => {
             alert('User updated succesfully')
             $('#editUserModal').modal('hide');
-            fetchUser();
+            location.reload();
         })
         .catch(error => {
             alert('Error updating user: ', error.message)
@@ -134,7 +167,7 @@ async function deleteUser(id) {
         .then(data => {
             alert('User Deleted Succesfully')
             $('#editUserModal').modal('hide');
-            fetchUser();
+            location.reload();
         })
         .catch(error => {
             alert('Error deleting user: ', error.message)
@@ -175,10 +208,10 @@ async function addUser() {
         .then(data => {
             alert('User added succesfully')
             $('#addUserModal').modal('hide');
-            fetchUser();
+            location.reload();
         })
         .catch(error => {
-            alert('Error adding user: ', error.message)
+            alert('Error adding user: ' + error.message)
         })
 }
 

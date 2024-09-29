@@ -3,37 +3,49 @@
 	Layout = "_LayoutLender";
 }
 
-<h2>Lender Saldo</h2>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<div>
-	<strong>Your Balance: </strong><span id="userBalance">Loading...</span>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="container mt-20">
+        <div class="balance-container p-4 mb-4 rounded shadow-sm d-flex justify-content-between align-items-center bg-primary text-white">
+            <strong><i class="fas fa-money-bill-wave"></i> Your Balance:</strong>
+            <span id="userBalance" class="display-4 font-weight-bold">Loading...</span>
+        </div>
+        <button type="button" class="btn bg-white text-dark btn-lg w-100 border" data-toggle="modal" data-target="#editSaldoModal">
+            <i class="fas fa-edit"></i> Ubah Saldo
+        </button>
+    </div>
 </div>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editSaldoModal">Ubah Saldo</button>
-
 <!-- Modal Edit Saldo -->
-<div class="modal fade" id="editSaldoModal" tabindex="-1" role="dialog" aria-labelledby="editSaldoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="editSaldoModal" tabindex="-1" aria-labelledby="editSaldoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editSaldoModalLabel">Edit Saldo</h5>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="editSaldoModalLabel">
+                    <i class="fas fa-edit"></i> Edit Saldo
+                </h5>
             </div>
             <div class="modal-body">
                 <form id="editSaldoForm">
-                    <div class="form-group">
-                        <label for="saldoAmount">Saldo</label>
-                        <input type="number" class="form-control" id="saldoAmount" required />
+                    <div class="mb-3">
+                        <label for="saldoAmount" class="form-label">Saldo</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="number" class="form-control" id="saldoAmount" required />
+                        </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="updateBalance()">Submit Changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateBalance()">
+                    <i class="fas fa-save"></i> Submit Changes
+                </button>
             </div>
         </div>
     </div>
 </div>
-
 
 @section Scripts {
 	<script src="~/js/saldo.js"></script>

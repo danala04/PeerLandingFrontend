@@ -84,17 +84,17 @@ async function populatePaymentsModal(loanId) {
             const paymentRows = document.getElementById('paymentRows');
             paymentRows.innerHTML = '';
 
+            let totalAmount = 0;
+
             jsonData2.data.forEach((payment, index) => {
                 const row = document.createElement('tr');
+                row.setAttribute('data-payment-id', payment.id);
 
                 const monthCell = document.createElement('td');
                 monthCell.textContent = `Bulan ${index + 1}`;
 
                 const amountCell = document.createElement('td');
-                amountCell.textContent = payment.amount;
-
-                const paymentIdCell = document.createElement('td')
-                paymentIdCell.textContent = payment.id;
+                amountCell.textContent = `$${formatCurrency(payment.amount)}`;
 
                 const payCell = document.createElement('td');
                 const checkBox = document.createElement('input');
@@ -102,16 +102,27 @@ async function populatePaymentsModal(loanId) {
                 checkBox.checked = payment.status;
                 checkBox.disabled = payment.status;
 
+                if (!payment.status) {
+                    checkBox.addEventListener('change', function () {
+                        if (checkBox.checked) {
+                            totalAmount += payment.amount;
+                        } else {
+                            totalAmount -= payment.amount;
+                        }
+                        document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+                    });
+                }
+
                 payCell.appendChild(checkBox);
 
                 row.appendChild(monthCell);
                 row.appendChild(amountCell);
-                row.appendChild(paymentIdCell);
                 row.appendChild(payCell);
 
-                console.log(row);
                 paymentRows.appendChild(row);
             });
+
+            document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
 
             $('#viewPaymentsModal').modal('show');
         } else {
@@ -122,6 +133,8 @@ async function populatePaymentsModal(loanId) {
     }
 }
 
+
+
 async function submitPayment() {
     const token = localStorage.getItem("jwtToken");
     const selectedPayments = [];
@@ -130,11 +143,10 @@ async function submitPayment() {
 
     paymentRows.forEach(row => {
         const checkBox = row.querySelector('input[type="checkbox"]');
-        const paymentIdCell = row.cells[2];
+
+        const paymentId = row.getAttribute('data-payment-id');
 
         if (checkBox.checked && !checkBox.disabled) {
-            const paymentId = paymentIdCell.textContent;
-
             selectedPayments.push({
                 paymentId: paymentId,
             });
@@ -147,7 +159,7 @@ async function submitPayment() {
     }
 
     const payload = selectedPayments;
-    console.log(payload)
+    console.log(payload);
 
     const response = await fetch('/ApiMothlyPayment/PayMonthlyPayment', {
         method: 'POST',
@@ -161,6 +173,7 @@ async function submitPayment() {
     if (response.ok) {
         alert('Payments submitted successfully!');
         $('#viewPaymentsModal').modal('hide');
+        fetchLoan();
     } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -169,12 +182,13 @@ async function submitPayment() {
 
 async function addRequestLoan() {
     const amount = document.getElementById('requestLoanAmount').value;
+    const bunga = document.getElementById('requestLoanInterest').value;
     const borrowerId = localStorage.getItem("userId");
 
     const reqAddLoanDto = {
         amount: parseFloat(amount),
         borrowerId: borrowerId,
-        interestRate: 0.25,
+        interestRate: bunga/100,
         duration: 12
     }
 
@@ -205,6 +219,18 @@ async function addRequestLoan() {
         });
 }
 
+function formatCurrency(amount) {
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount)) {
+        throw new Error("Invalid amount");
+    }
+
+    return numericAmount.toLocaleString('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 2
+    });
+}
 
 
 window.onload = fetchLoan;

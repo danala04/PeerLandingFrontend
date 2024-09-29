@@ -21,14 +21,14 @@ namespace PeerLandingFE.Controllers.api
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync("https://localhost:7240/rest/v1/user/Login", content);
 
+            var responseData = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)
             {
-                var responseData = await response.Content.ReadAsStringAsync();
-                return Ok(responseData);
+                return Ok(JsonDocument.Parse(responseData).RootElement);
             }
             else
             {
-                return BadRequest("Login Failed");
+                return BadRequest(JsonDocument.Parse(responseData).RootElement);
             }
         }
     }

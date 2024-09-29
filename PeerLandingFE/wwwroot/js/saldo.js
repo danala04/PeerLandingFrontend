@@ -17,8 +17,9 @@
 
     if (data.success) {
         const user = data.data;
+        const formattedBalance = parseFloat(user.balance).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 });
 
-        document.getElementById("userBalance").textContent = user.balance;
+        document.getElementById("userBalance").textContent = formattedBalance;
     } else {
         alert(data.message);
     }
@@ -66,6 +67,7 @@ async function updateBalance() {
             const updateData = await updateResponse.json();
             console.log(updateData);
 
+            location.reload();
             $('#editSaldoModal').modal('hide');
             alert('Balance updated successfully');            
             fetchUserById();

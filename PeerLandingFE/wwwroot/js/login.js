@@ -27,11 +27,11 @@
                 console.log(role);
 
                 if (role === 'admin') {
-                    window.location.href = '/home/index';
+                    window.location.href = '/mstUser/index';
                 } else if (role === 'borrower') {
                     window.location.href = '/borrowerLoan/index';
                 } else if (role === 'lender') {
-                    window.location.href = '/lenderSaldo/index';
+                    window.location.href = '/lenderLoan/index';
                 }
                 else {
                     alert('Unauthorized role.');

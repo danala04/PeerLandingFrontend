@@ -47,6 +47,7 @@ async function populateLoansTable(loans) {
         loans.forEach(loan => {
             const row = document.createElement("tr");
             const isBalanceValid = user.balance >= loan.amount
+            const formattedBalance = parseFloat(loan.amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 });
 
             let actionButton = '';
             if (loan.status === "requested" && isBalanceValid) {
@@ -59,8 +60,8 @@ async function populateLoansTable(loans) {
 
             row.innerHTML = `
           <td>${loan.user.name}</td>
-          <td>${loan.amount}</td>
-          <td>25%</td>
+          <td><b>${formattedBalance}</b></td>
+          <td>${(loan.interestRate * 100).toFixed(2)}%</td>
           <td>${loan.duration} Bulan</td>
           <td>${loan.status}</td>
           <td>${actionButton}</td>
@@ -68,6 +69,19 @@ async function populateLoansTable(loans) {
 
             loanTableBody.appendChild(row);
         });
+
+        if (!$.fn.DataTable.isDataTable("#loansTable")) {
+            $('#loansTable').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": false,
+                "responsive": true,
+                "searching": true,
+                "autoWidth": false
+            });
+        } else {
+            $('#loansTable').DataTable().clear().rows.add(loans).draw();
+        }
     } else {
         alert(data.message);
     }
@@ -102,7 +116,7 @@ async function fundingLoan(loanId) {
         })
         .then(data => {
             alert('funding added successfully');
-            fetchLoans();
+            location.reload();
         })
         .catch(error => {
             alert('Error adding funding: ' + error.message);

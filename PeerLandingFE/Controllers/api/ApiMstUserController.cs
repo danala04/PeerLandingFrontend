@@ -126,14 +126,15 @@ namespace PeerLandingFE.Controllers.api
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync($"https://localhost:7240/rest/v1/user/AddUser", content);
 
+            var responseData = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode)
-            {
-                var responseData = await response.Content.ReadAsStringAsync();
+            {                
                 return Ok(responseData);
             }
             else
             {
-                return BadRequest("Failed to add user");
+                return BadRequest(JsonDocument.Parse(responseData).RootElement);
             }
         }
     }
