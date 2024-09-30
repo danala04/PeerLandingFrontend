@@ -24,16 +24,29 @@
 
 function populateLoanTable(loans) {
     const loanTableBody = document.querySelector("#loanTable tbody");
-    loanTableBody.innerHTML = "";
-    console.log(loans);
+    loanTableBody.innerHTML = "";    
 
     loans.forEach(loan => {
         const row = document.createElement("tr");
+
+        let statusClass = '';
+        switch (loan.status.toLowerCase()) {
+            case 'repaid':
+                statusClass = 'badge bg-success';
+                break;
+            case 'funded':
+                statusClass = 'badge bg-warning';
+                break;
+            default:
+                statusClass = 'badge bg-danger';
+                break;
+        }
+
         row.innerHTML = `
           <td>${loan.amount}</td>
           <td>${(loan.interestRate * 100).toFixed(2)}%</td>
           <td>${loan.duration} Bulan</td>
-          <td>${loan.status}</td>
+          <td><span class="${statusClass}">${loan.status}</span></td>
           <td>            
             ${loan.status === "funded" ? `<button class="btn btn-success btn-sm" onClick="populatePaymentsModal('${loan.loanId}')">Pay</button>` : `<button class="btn btn-primary btn-sm" onClick="">Details</button>`}
           </td>
@@ -94,7 +107,7 @@ async function populatePaymentsModal(loanId) {
                 monthCell.textContent = `Bulan ${index + 1}`;
 
                 const amountCell = document.createElement('td');
-                amountCell.textContent = `$${formatCurrency(payment.amount)}`;
+                amountCell.textContent = `${formatCurrency(payment.amount)}`;
 
                 const payCell = document.createElement('td');
                 const checkBox = document.createElement('input');
@@ -174,6 +187,7 @@ async function submitPayment() {
         alert('Payments submitted successfully!');
         $('#viewPaymentsModal').modal('hide');
         fetchLoan();
+        location.reload();
     } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);

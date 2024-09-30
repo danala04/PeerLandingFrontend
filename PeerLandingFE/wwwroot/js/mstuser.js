@@ -40,35 +40,41 @@ function populateUserTable(users) {
         const row = document.createElement("tr");
         const formattedBalance = parseFloat(user.balance).toLocaleString('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 });
         let roleClass = '';
+        let roleIcon = '';
+
         switch (user.role.toLowerCase()) {
             case 'admin':
                 roleClass = 'badge bg-danger';
+                roleIcon = '<i class="fas fa-user-shield"></i>';
                 break;
             case 'lender':
                 roleClass = 'badge bg-primary';
+                roleIcon = '<i class="fas fa-hand-holding-usd"></i>';
                 break;
             case 'borrower':
                 roleClass = 'badge bg-success';
+                roleIcon = '<i class="fas fa-handshake"></i>';
                 break;
             default:
                 roleClass = 'badge bg-secondary';
+                roleIcon = '<i class="fas fa-user"></i>';
                 break;
         }
 
         row.innerHTML = `
-          <td><b>${user.name}<b></td>
-          <td>${user.email}</td>
-          <td><span class="${roleClass}">${user.role}</span></td>
-          <td>${formattedBalance}</td>
-          <td>
-              <button class="btn btn-primary btn-sm" onClick="editUser('${user.id}')">
-                <i class="fas fa-edit"></i> Edit
-              </button>
-              <button class="btn btn-danger btn-sm" onClick="deleteUser('${user.id}')">
-                <i class="fas fa-trash"></i> Delete
-              </button>
-            </td>
-        `;
+      <td><b>${user.name}<b></td>
+      <td>${user.email}</td>
+      <td><span class="${roleClass}">${roleIcon} ${user.role}</span></td> <!-- Add icon -->
+      <td>${formattedBalance}</td>
+      <td>
+          <button class="btn btn-primary btn-sm" onClick="editUser('${user.id}')">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn btn-danger btn-sm" onClick="deleteUser('${user.id}')">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </td>
+    `;
         userTableBody.appendChild(row);
     });
 }

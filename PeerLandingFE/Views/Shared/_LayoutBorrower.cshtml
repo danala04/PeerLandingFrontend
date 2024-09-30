@@ -23,6 +23,35 @@
         footer {
             margin-top: auto;
         }
+
+        .balance-container {
+            background-color: #007bff;
+            color: #fff;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .balance-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .balance-icon, .edit-icon {
+            font-size: 1rem;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        #userBalance {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -40,6 +69,14 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="borrowerLoan" asp-action="Index">Borrower</a>
                         </li>
                     </ul>
+
+                    <div class="balance-section d-flex ms-auto me-3">
+                        <div class="balance-container d-flex">
+                            <i class="fas fa-money-bill-wave balance-icon"></i>
+                            <span id="userBalance">Loading...</span>
+                        </div>
+                    </div>
+
                     <button class="btn btn-outline-light" id="logoutButton">
                         <i class="bi bi-box-arrow-right"></i> Logout
                     </button>
@@ -62,6 +99,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/saldo.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>

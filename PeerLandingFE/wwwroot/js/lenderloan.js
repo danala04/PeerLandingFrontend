@@ -51,21 +51,31 @@ async function populateLoansTable(loans) {
 
             let actionButton = '';
             if (loan.status === "requested" && isBalanceValid) {
-                actionButton = `<button class="btn btn-primary btn-sm" onClick="fundingLoan('${loan.loanId}')">Beri Pinjaman</button>`;
+                actionButton = `
+        <button class="btn btn-primary btn-sm" onClick="fundingLoan('${loan.loanId}')">
+            <i class="fas fa-hand-holding-usd"></i> Beri Pinjaman
+        </button>`;
             } else if (loan.status === "requested" && !isBalanceValid) {
-                actionButton = `<button class="btn btn-danger btn-sm" disabled>Insufficient Balance</button>`;
+                actionButton = `
+        <button class="btn btn-danger btn-sm" disabled>
+            <i class="fas fa-exclamation-triangle"></i> Insufficient Balance
+        </button>`;
             } else {
-                actionButton = `<button class="btn btn-warning btn-sm" disabled>Loan already funded</button>`;
+                actionButton = `
+        <button class="btn btn-warning btn-sm" disabled>
+            <i class="fas fa-lock"></i> Loan already funded
+        </button>`;
             }
 
             row.innerHTML = `
-          <td>${loan.user.name}</td>
-          <td><b>${formattedBalance}</b></td>
-          <td>${(loan.interestRate * 100).toFixed(2)}%</td>
-          <td>${loan.duration} Bulan</td>
-          <td>${loan.status}</td>
-          <td>${actionButton}</td>
-        `;
+    <td>${loan.user.name}</td>
+    <td><b>${formattedBalance}</b></td>
+    <td>${(loan.interestRate * 100).toFixed(2)}%</td>
+    <td>${loan.duration} Bulan</td>
+    <td >${loan.status}</td>
+    <td>${actionButton}</td>
+`;
+
 
             loanTableBody.appendChild(row);
         });
